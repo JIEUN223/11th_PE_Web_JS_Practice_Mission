@@ -1,53 +1,29 @@
-import { useState } from "react";
-import MovieCard, { type Movie } from "./components/movie-card";
+import { createContext, useContext, useState } from "react";
 import "./App.css";
 
-const initialMovies: Movie[] = [
-  {
-    id: 1,
-    title: "오디세이",
-    releaseDate: "2026.08.05",
-    isBookmarked: true,
-  },
-  {
-    id: 2,
-    title: "토이 스토리 5",
-    releaseDate: "2026.06.17",
-    isBookmarked: false,
-  },
-  {
-    id: 3,
-    title: "듄: 파트 3",
-    releaseDate: "2027.01.15",
-    isBookmarked: false,
-  },
-];
+type StudyMode = "focus" | "break";
+
+const StudyModeContext = createContext<StudyMode>("focus");
+
+function StudyModeStatus() {
+  const studyMode = useContext(StudyModeContext);
+
+  return <p>현재 모드: {studyMode === "focus" ? "집중" : "휴식"}</p>;
+}
 
 export default function App() {
-  const [movies, setMovies] = useState(initialMovies);
+  const [studyMode, setStudyMode] = useState<StudyMode>("focus");
 
-  function handleToggleBookmark(movieId: number) {
-    setMovies((currentMovies) =>
-      currentMovies.map((movie) =>
-        movie.id === movieId
-          ? { ...movie, isBookmarked: !movie.isBookmarked }
-          : movie,
-      ),
+  function handleToggleStudyMode() {
+    setStudyMode((currentMode) =>
+      currentMode === "focus" ? "break" : "focus",
     );
   }
 
   return (
-    <main>
-      <h1>영화 목록</h1>
-      <ul>
-        {movies.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            movie={movie}
-            onToggleBookmark={handleToggleBookmark}
-          />
-        ))}
-      </ul>
-    </main>
+    <StudyModeContext value={studyMode}>
+      <StudyModeStatus />
+      <button onClick={handleToggleStudyMode}>모드 바꾸기</button>
+    </StudyModeContext>
   );
 }

@@ -1,29 +1,48 @@
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
+import Header from "./components/layout/header";
+import Footer from "./components/layout/footer";
+import MovieGrid from "./components/movies/movie-grid";
+import Pagination from "./components/movies/pagination";
+import { movies as initialMovies } from "./data/movies";
 import "./App.css";
 
-type StudyMode = "focus" | "break";
-
-const StudyModeContext = createContext<StudyMode>("focus");
-
-function StudyModeStatus() {
-  const studyMode = useContext(StudyModeContext);
-
-  return <p>현재 모드: {studyMode === "focus" ? "집중" : "휴식"}</p>;
-}
+const MOVIES_PER_PAGE = 10;
 
 export default function App() {
-  const [studyMode, setStudyMode] = useState<StudyMode>("focus");
+  const [movies, setMovies] = useState(initialMovies);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  function handleToggleStudyMode() {
-    setStudyMode((currentMode) =>
-      currentMode === "focus" ? "break" : "focus",
+  function handleToggleBookmark(movieId: number) {
+    setMovies((currentMovies) =>
+      currentMovies.map((movie) =>
+        movie.id === movieId
+          ? { ...movie, isBookmarked: !movie.isBookmarked }
+          : movie,
+      ),
     );
   }
 
+  const totalPages = Math.ceil(movies.length / MOVIES_PER_PAGE);
+  const pagedMovies = movies.slice(
+    (currentPage - 1) * MOVIES_PER_PAGE,
+    currentPage * MOVIES_PER_PAGE,
+  );
+
   return (
-    <StudyModeContext value={studyMode}>
-      <StudyModeStatus />
-      <button onClick={handleToggleStudyMode}>모드 바꾸기</button>
-    </StudyModeContext>
+    <div className="app">
+      <Header />
+      <main className="app__main">
+        <h1 className="app__title">영화 목록</h1>
+        <MovieGrid movies={pagedMovies} onToggleBookmark={handleToggleBookmark} />
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
+      </main>
+      <Footer />
+    </div>
   );
 }

@@ -1,16 +1,27 @@
-interface MovieCardProps {
+export interface Movie {
+  id: number;
   title: string;
   releaseDate: string;
   isBookmarked: boolean;
 }
 
-function MovieCard({ title, releaseDate, isBookmarked }: MovieCardProps) {
+interface MovieCardProps {
+  movie: Movie;
+  onToggleBookmark: (movieId: number) => void;
+}
+
+function MovieCard({ movie, onToggleBookmark }: MovieCardProps) {
   return (
-    <article>
-      <h2>{title}</h2>
-      <p>{releaseDate}</p>
-      <p>{isBookmarked ? "북마크됨" : "북마크 안 됨"}</p>
-    </article>
+    <li>
+      <span>{movie.title}</span>
+      <span>{movie.releaseDate}</span>
+      <button
+        aria-pressed={movie.isBookmarked}
+        onClick={() => onToggleBookmark(movie.id)}
+      >
+        {movie.isBookmarked ? "북마크 해제" : "북마크 추가"}
+      </button>
+    </li>
   );
 }
 

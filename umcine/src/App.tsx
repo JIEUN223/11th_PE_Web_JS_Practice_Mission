@@ -1,32 +1,29 @@
+import { useState } from "react";
 import "./App.css";
 
-interface Movie {
-  id: number;
-  title: string;
-  releaseDate: string;
-}
-
-const movies: Movie[] = [
-  { id: 1, title: "오디세이", releaseDate: "2026.08.05" },
-  { id: 2, title: "토이 스토리 5", releaseDate: "2026.06.17" },
-  { id: 3, title: "듄: 파트 3", releaseDate: "2027.01.15" },
-];
+const MIN_COUNT = 0;
+const MAX_COUNT = 5;
 
 export default function App() {
+  const [count, setCount] = useState(0);
+
   return (
     <main>
-      <h1>영화 목록</h1>
-      {movies.length === 0 ? (
-        <p>표시할 영화가 없어요.</p>
-      ) : (
-        <ul>
-          {movies.map((movie) => (
-            <li key={movie.id}>
-              {movie.title} - {movie.releaseDate}
-            </li>
-          ))}
-        </ul>
-      )}
+      <h1>카운터</h1>
+      <p>현재 값: {count}</p>
+      <button
+        onClick={() => setCount((current) => Math.min(current + 1, MAX_COUNT))}
+        disabled={count === MAX_COUNT}
+      >
+        +1
+      </button>
+      <button
+        onClick={() => setCount((current) => Math.max(current - 1, MIN_COUNT))}
+        disabled={count === MIN_COUNT}
+      >
+        -1
+      </button>
+      <button onClick={() => setCount(0)}>초기화</button>
     </main>
   );
 }

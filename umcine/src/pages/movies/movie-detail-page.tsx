@@ -36,7 +36,7 @@ export function MovieDetailPage() {
 
   return (
     <main className="flex-1">
-      <section className="relative h-[280px] w-full overflow-hidden border-y-2 border-app-accent bg-gray-900 sm:h-[389px]">
+      <section className="relative h-[280px] w-full overflow-hidden bg-gray-900 sm:h-[389px]">
         <img
           className="absolute inset-0 h-full w-full object-cover"
           src={movie.backdropPath}

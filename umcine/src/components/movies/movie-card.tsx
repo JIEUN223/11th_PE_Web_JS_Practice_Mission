@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import type { Movie } from "../../types/movie";
 import { cn } from "../../utils/cn";
 import "./movie-card.css";
@@ -11,11 +12,13 @@ function MovieCard({ movie, onToggleBookmark }: MovieCardProps) {
   return (
     <li className="movie-card">
       <div className="movie-card__poster-wrap">
-        <img
-          className="movie-card__poster"
-          src={movie.posterPath}
-          alt={movie.title}
-        />
+        <Link to="/movies/$movieId" params={{ movieId: String(movie.id) }}>
+          <img
+            className="movie-card__poster"
+            src={movie.posterPath}
+            alt={movie.title}
+          />
+        </Link>
         <button
           type="button"
           className={cn(
@@ -35,7 +38,9 @@ function MovieCard({ movie, onToggleBookmark }: MovieCardProps) {
         </button>
       </div>
       <div className="movie-card__info">
-        <p className="movie-card__title">{movie.title}</p>
+        <Link to="/movies/$movieId" params={{ movieId: String(movie.id) }}>
+          <p className="movie-card__title">{movie.title}</p>
+        </Link>
         <p className="movie-card__release-date">{movie.releaseDate}</p>
       </div>
     </li>

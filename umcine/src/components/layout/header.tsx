@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import "./header.css";
 
 function Header() {
@@ -5,17 +6,17 @@ function Header() {
     <header className="header">
       <div className="header__inner">
         <div className="header__left">
-          <a className="header__logo" href="/">
+          <Link className="header__logo" to="/">
             <img src="/icons/movie.svg" alt="" aria-hidden="true" />
             <span>UMCine</span>
-          </a>
+          </Link>
           <nav className="header__nav">
-            <a className="header__nav-link header__nav-link--active" href="/">
+            <Link className="header__nav-link header__nav-link--active" to="/">
               영화
-            </a>
-            <a className="header__nav-link" href="/search">
+            </Link>
+            <Link className="header__nav-link" to="/search">
               검색
-            </a>
+            </Link>
             <a className="header__nav-link" href="/mypage">
               내 정보
             </a>

@@ -26,8 +26,10 @@ export function MovieListPage() {
   );
 
   return (
-    <main className="app__main">
-      <h1 className="app__title">영화 목록</h1>
+    <main className="mx-auto w-full max-w-[1126px] flex-1 px-6 py-8 pb-16">
+      <h1 className="mb-6 text-left text-[28px] font-extrabold text-app-text-h">
+        영화 목록
+      </h1>
       <MovieGrid movies={pagedMovies} onToggleBookmark={handleToggleBookmark} />
       {totalPages > 1 && (
         <Pagination

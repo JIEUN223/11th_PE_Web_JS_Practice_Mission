@@ -1,42 +1,31 @@
+import { Link } from "@tanstack/react-router";
 import type { Movie } from "../../types/movie";
-import { cn } from "../../utils/cn";
-import "./movie-card.css";
+import BookmarkButton from "./bookmark-button";
 
 interface MovieCardProps {
   movie: Movie;
-  onToggleBookmark: (movieId: number) => void;
 }
 
-function MovieCard({ movie, onToggleBookmark }: MovieCardProps) {
+function MovieCard({ movie }: MovieCardProps) {
   return (
-    <li className="movie-card">
-      <div className="movie-card__poster-wrap">
-        <img
-          className="movie-card__poster"
-          src={movie.posterPath}
-          alt={movie.title}
-        />
-        <button
-          type="button"
-          className={cn(
-            "movie-card__bookmark",
-            movie.isBookmarked && "movie-card__bookmark--active",
-          )}
-          aria-pressed={movie.isBookmarked}
-          aria-label={movie.isBookmarked ? "북마크 해제" : "북마크 추가"}
-          onClick={() => onToggleBookmark(movie.id)}
-        >
+    <li className="list-none text-left">
+      <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-app-surface">
+        <Link to="/movies/$movieId" params={{ movieId: String(movie.id) }}>
           <img
-            className="movie-card__bookmark-icon"
-            src={movie.isBookmarked ? "/icons/bookmark.svg" : "/icons/bookmark-outline.svg"}
-            alt=""
-            aria-hidden="true"
+            className="block h-full w-full object-cover"
+            src={movie.posterPath}
+            alt={movie.title}
           />
-        </button>
+        </Link>
+        <BookmarkButton movieId={movie.id} />
       </div>
-      <div className="movie-card__info">
-        <p className="movie-card__title">{movie.title}</p>
-        <p className="movie-card__release-date">{movie.releaseDate}</p>
+      <div className="mt-2.5">
+        <Link to="/movies/$movieId" params={{ movieId: String(movie.id) }}>
+          <p className="truncate text-[15px] font-bold text-app-text-h">
+            {movie.title}
+          </p>
+        </Link>
+        <p className="mt-1 text-[13px] text-app-text">{movie.releaseDate}</p>
       </div>
     </li>
   );

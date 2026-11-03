@@ -32,6 +32,8 @@ function movieDetailQueryOptions(movieId: number) {
   return queryOptions({
     queryKey: movieKeys.detail(movieId),
     queryFn: () => getMovieDetail(movieId),
+    // 상세 조회는 30초 동안만 fresh로 취급해요. (전역 기본값은 1분)
+    staleTime: 1000 * 30,
   });
 }
 

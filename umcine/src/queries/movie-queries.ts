@@ -3,7 +3,7 @@ import { getMovieDetail } from "../api/movies/get-movie-detail";
 import { getMovies } from "../api/movies/get-movies";
 import { searchMovies } from "../api/movies/search-movies";
 
-// 요청 종류(list/search/detail)와 파라미터가 key에 모두 들어가서 서로 다른 요청이 구분돼요.
+// 요청 종류(list/search/detail)와 파라미터가 key에 모두 들어가서 서로 다른 요청이 구분됨.
 const movieKeys = {
   all: ["movies"] as const,
   list: (page: number) => [...movieKeys.all, "list", { page }] as const,
@@ -32,7 +32,7 @@ function movieDetailQueryOptions(movieId: number) {
   return queryOptions({
     queryKey: movieKeys.detail(movieId),
     queryFn: () => getMovieDetail(movieId),
-    // 상세 조회는 30초 동안만 fresh로 취급해요. (전역 기본값은 1분)
+    // 상세 조회는 30초 동안만 fresh로 취급함. (전역 기본값은 1분)
     staleTime: 1000 * 30,
   });
 }

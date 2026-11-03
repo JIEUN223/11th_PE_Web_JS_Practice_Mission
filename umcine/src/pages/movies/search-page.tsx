@@ -22,7 +22,7 @@ export function SearchPage() {
     movieSearchQueryOptions(normalizedQuery),
   );
   const searchResults = data?.results ?? [];
-  // 검색어가 없으면 쿼리가 비활성화(enabled: false)되어 isPending이 true로 남아요.
+  // 검색어가 없으면 쿼리가 비활성화(enabled: false)되어 isPending이 true로 남음.
   const isLoading = Boolean(normalizedQuery) && isPending;
   const errorMessage = isError ? "검색 결과를 불러오지 못했어요." : null;
 

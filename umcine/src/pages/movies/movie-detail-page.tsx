@@ -40,7 +40,7 @@ export function MovieDetailPage() {
   } = useQuery({
     ...movieDetailQueryOptions(parsedMovieId),
     enabled: isValidMovieId,
-    // 존재하지 않는 영화(404)는 다시 시도해도 같은 결과라 재시도하지 않아요.
+    // 존재하지 않는 영화(404)는 다시 시도해도 같은 결과라 재시도하지 않음.
     retry: (failureCount, err) =>
       !(isHTTPError(err) && err.response.status === 404) && failureCount < 1,
   });

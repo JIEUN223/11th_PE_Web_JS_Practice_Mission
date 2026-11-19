@@ -1,5 +1,6 @@
-// JWT payload에서 회원 번호를 꺼냄. (me/login 응답에 memberId가 없어서 토큰에서 읽음)
-// 서버가 어떤 claim에 담는지에 맞춰 memberId, id, userId, sub 순서로 찾음.
+// JWT payload에서 회원 번호를 꺼냄. 
+// 서버가 토큰을 만들 때 memberId를 subject(sub)에 문자열로 담음. (JwtUtil.createAccessToken)
+// 서명 검증은 서버가 하므로 여기서는 payload만 읽음.
 export function getMemberIdFromToken(token: string | null): number | null {
   if (!token) return null;
 
@@ -14,9 +15,7 @@ export function getMemberIdFromToken(token: string | null): number | null {
       unknown
     >;
 
-    const memberId = Number(
-      claims.memberId ?? claims.id ?? claims.userId ?? claims.sub,
-    );
+    const memberId = Number(claims.sub);
     return Number.isInteger(memberId) && memberId > 0 ? memberId : null;
   } catch {
     return null;

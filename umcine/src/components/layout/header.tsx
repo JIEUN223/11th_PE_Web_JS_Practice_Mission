@@ -45,7 +45,10 @@ function Header() {
 
   const handleLogout = () => {
     setAccessToken(null);
-    queryClient.removeQueries({ queryKey: ["members"] });
+    // 이전 사용자의 정보가 남지 않도록 로그인 사용자별 캐시를 지움
+    for (const key of ["members", "favorites", "ratings"]) {
+      queryClient.removeQueries({ queryKey: [key] });
+    }
     navigate({ to: "/" });
   };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
   useMutation,
@@ -43,6 +43,12 @@ function MyPageEditForm({ me }: { me: MemberInfo }) {
   const canSave =
     isChanged && isNicknameValid && isNicknameChecked && !isSaving && !isChecking;
 
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!canSave) return;
+    save({ nickname: trimmed });
+  };
+
   const handleChangeNickname = (value: string) => {
     if (isChecking) return;
     setNickname(value);
@@ -68,100 +74,101 @@ function MyPageEditForm({ me }: { me: MemberInfo }) {
 
   return (
     <main className="mx-auto flex w-full max-w-[1126px] flex-1 flex-col px-6 py-6 pb-10">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-[28px] font-extrabold text-app-text-h">
-            내 정보 수정
-          </h1>
-          <p className="mt-1 text-xs text-app-text">
-            닉네임과 프로필 이미지만 변경할 수 있어요.
-          </p>
-        </div>
-        <button
-          type="button"
-          disabled={!canSave}
-          onClick={() => save({ nickname: trimmed })}
-          className="h-9 rounded-lg border-none bg-app-accent px-4 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isSaving ? "저장 중" : "변경사항 저장"}
-        </button>
-      </div>
-
-      <div className="mt-8 grid gap-10 md:grid-cols-2">
-        <div className="flex flex-col items-center pt-4">
-          <div className="relative">
-            <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-app-surface">
-              <img className="h-9 w-9" src="/icons/person.svg" alt="" />
-            </div>
-            <button
-              type="button"
-              aria-label="프로필 이미지 변경"
-              className="absolute right-0 bottom-0 flex h-[22px] w-[22px] items-center justify-center rounded-full border-none bg-white p-0"
-            >
-              <img className="h-[22px] w-[22px]" src="/icons/edit.svg" alt="" />
-            </button>
+      <form onSubmit={handleSubmit} className="flex flex-1 flex-col">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-[28px] font-extrabold text-app-text-h">
+              내 정보 수정
+            </h1>
+            <p className="mt-1 text-xs text-app-text">
+              닉네임과 프로필 이미지만 변경할 수 있어요.
+            </p>
           </div>
-          <p className="mt-2 text-[13px] font-bold text-app-text-h">
-            프로필 이미지
-          </p>
-          <p className="mt-0.5 text-[11px] text-gray-400">
-            선택 사항 · 최대 5MB
-          </p>
+          <button
+            type="submit"
+            disabled={!canSave}
+            className="h-9 rounded-lg border-none bg-app-accent px-4 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isSaving ? "저장 중" : "변경사항 저장"}
+          </button>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <label className="flex flex-col gap-2">
-            <span className="text-[13px] font-bold text-app-text-h">닉네임</span>
+        <div className="mt-8 grid gap-10 md:grid-cols-2">
+          <div className="flex flex-col items-center pt-4">
             <div className="relative">
-              <input
-                type="text"
-                className={`${inputClass} pr-20`}
-                value={nickname}
-                disabled={isChecking}
-                onChange={(e) => handleChangeNickname(e.target.value)}
-              />
+              <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-app-surface">
+                <img className="h-9 w-9" src="/icons/person.svg" alt="" />
+              </div>
               <button
                 type="button"
-                onClick={handleCheckNickname}
-                disabled={!isNicknameValid || !isChanged || isChecking}
-                className="absolute top-1/2 right-3 -translate-y-1/2 border-none bg-transparent text-xs font-bold text-app-accent disabled:cursor-not-allowed disabled:opacity-40"
+                aria-label="프로필 이미지 변경"
+                className="absolute right-0 bottom-0 flex h-[22px] w-[22px] items-center justify-center rounded-full border-none bg-white p-0"
               >
-                {isNicknameChecked ? "확인 완료" : "중복 확인"}
+                <img className="h-[22px] w-[22px]" src="/icons/edit.svg" alt="" />
               </button>
             </div>
-            {!isNicknameValid && (
-              <span className="text-xs text-red-500">
-                닉네임은 2–12자로 입력해 주세요
-              </span>
-            )}
-          </label>
+            <p className="mt-2 text-[13px] font-bold text-app-text-h">
+              프로필 이미지
+            </p>
+            <p className="mt-0.5 text-[11px] text-gray-400">
+              선택 사항 · 최대 5MB
+            </p>
+          </div>
 
-          <label className="flex flex-col gap-2">
-            <span className="text-[13px] font-bold text-app-text-h">이메일</span>
-            <input
-              type="email"
-              className={inputClass}
-              value={me.email}
-              readOnly
-            />
-          </label>
-        </div>
-      </div>
+          <div className="flex flex-col gap-4">
+            <label className="flex flex-col gap-2">
+              <span className="text-[13px] font-bold text-app-text-h">닉네임</span>
+              <div className="relative">
+                <input
+                  type="text"
+                  className={`${inputClass} pr-20`}
+                  value={nickname}
+                  disabled={isChecking}
+                  onChange={(e) => handleChangeNickname(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={handleCheckNickname}
+                  disabled={!isNicknameValid || !isChanged || isChecking}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 border-none bg-transparent text-xs font-bold text-app-accent disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {isNicknameChecked ? "확인 완료" : "중복 확인"}
+                </button>
+              </div>
+              {!isNicknameValid && (
+                <span className="text-xs text-red-500">
+                  닉네임은 2–12자로 입력해 주세요
+                </span>
+              )}
+            </label>
 
-      <section className="mt-auto flex items-center justify-between rounded-lg border border-red-500 bg-red-50 px-5 py-4">
-        <div>
-          <h2 className="text-[13px] font-bold text-red-600">회원 탈퇴</h2>
-          <p className="mt-1 text-[11px] text-red-600">
-            탈퇴하면 작성한 평점, 후기와 즐겨찾기가 모두 삭제되며 복구할 수 없습니다.
-          </p>
+            <label className="flex flex-col gap-2">
+              <span className="text-[13px] font-bold text-app-text-h">이메일</span>
+              <input
+                type="email"
+                className={inputClass}
+                value={me.email}
+                readOnly
+              />
+            </label>
+          </div>
         </div>
-        <button
-          type="button"
-          className="h-9 flex-shrink-0 rounded-lg border border-red-500 bg-white px-4 text-sm font-bold text-red-600"
-        >
-          회원 탈퇴
-        </button>
-      </section>
+
+        <section className="mt-auto flex items-center justify-between rounded-lg border border-red-500 bg-red-50 px-5 py-4">
+          <div>
+            <h2 className="text-[13px] font-bold text-red-600">회원 탈퇴</h2>
+            <p className="mt-1 text-[11px] text-red-600">
+              탈퇴하면 작성한 평점, 후기와 즐겨찾기가 모두 삭제되며 복구할 수 없습니다.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="h-9 flex-shrink-0 rounded-lg border border-red-500 bg-white px-4 text-sm font-bold text-red-600"
+          >
+            회원 탈퇴
+          </button>
+        </section>
+      </form>
     </main>
   );
 }

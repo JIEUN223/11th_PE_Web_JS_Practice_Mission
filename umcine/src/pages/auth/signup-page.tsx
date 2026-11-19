@@ -98,6 +98,7 @@ export function SignupPage() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   // const navigate = useNavigate();
   const [duplicateCheck, setDuplicateCheck] = useState({
     email: DEFAULT_DUPLICATE_CHECK,
@@ -116,6 +117,7 @@ export function SignupPage() {
     duplicateCheck.nickname.isAvailable;
 
   const handleChangeField = (key: SignupField, value: string) => {
+    setSubmitError(null);
     if (key === "email" || key === "nickname") {
       if (duplicateCheck[key].isChecking) return;
       // 확인한 값을 바꾸면 다시 중복 확인해야 함
@@ -179,6 +181,7 @@ export function SignupPage() {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
       handleChangeField(field, e.target.value),
     onBlur: () => handleBlur(field),
+    "aria-required": true,
     "aria-invalid": !!errorOf(field),
     className: cn(
       inputClass,
@@ -193,6 +196,7 @@ export function SignupPage() {
     if (!canSubmit || isSubmitting) return;
 
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const response = await signup({
         email: form.email.trim(),
@@ -203,7 +207,7 @@ export function SignupPage() {
       // 로그인 페이지 연결 후 주석 해제
       // navigate({ to: "/login" });
     } catch {
-      alert("회원가입에 실패했어요. 다시 시도해 주세요.");
+      setSubmitError("회원가입에 실패했어요. 다시 시도해 주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -312,6 +316,12 @@ export function SignupPage() {
         >
           {isSubmitting ? "가입 중" : "가입하기"}
         </button>
+
+        {submitError && (
+          <p role="alert" className="mt-3 text-center text-sm text-red-500">
+            {submitError}
+          </p>
+        )}
 
         <p className="mt-5 text-center text-sm text-app-text">
           이미 계정이 있나요?{" "}
